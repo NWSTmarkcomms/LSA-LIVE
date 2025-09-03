@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Northwest Live Ad Reporting</title>
+  <style>
+    body {
+      font-family: 'Gotham', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #85C446;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 24px;
+    }
+    main {
+      padding: 20px;
+    }
+    .kpi {
+      display: inline-block;
+      background: white;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 200px;
+    }
+    .kpi h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #85C446;
+    }
+    .kpi p {
+      font-size: 24px;
+      margin: 5px 0 0 0;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>Northwest Live Ad Reporting<br/>"I'm an easy user experience"</header>
+  <main>
+    <div class="kpi">
+      <h2>Total Leads</h2>
+      <p id="leads">--</p>
+    </div>
+    <div class="kpi">
+      <h2>Average CPL</h2>
+      <p id="cpl">--</p>
+    </div>
+    <div class="kpi">
+      <h2>Response Rate</h2>
+      <p id="resp">--</p>
+    </div>
+  </main>
+  <footer>© 2025 Northwest Exterminating</footer>
+  <script>
+    async function loadData() {
+      try {
+        const response = await fetch('./data/data.json');
+        const data = await response.json();
+        
+        // Simple aggregate example
+        const leads = data.reduce((acc, row) => acc + (parseInt(row.Leads) || 0), 0);
+        const spend = data.reduce((acc, row) => acc + (parseFloat(row["Spend ($)"]) || 0), 0);
+        const responses = data.reduce((acc, row) => acc + (parseInt(row.Responses) || 0), 0);
+
+        document.getElementById('leads').textContent = leads;
+        document.getElementById('cpl').textContent = leads ? (spend / leads).toFixed(2) : '--';
+        document.getElementById('resp').textContent = leads ? ((responses / leads) * 100).toFixed(1) + "%" : '--';
+      } catch (err) {
+        console.error("Failed to load data.json", err);
+      }
+    }
+    loadData();
+  </script>
+</body>
+</html>
